@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Donasi Santri - Pondok Pesantren Imam Syafi'i Brebes</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#064e3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Donasi Santri">
+  <link rel="apple-touch-icon" href="./logo.png">
+  <link rel="icon" type="image/png" href="./logo.png">
+  <link rel="shortcut icon" type="image/png" href="./logo.png">
+
+  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #064e3b;
+      --primary-light: #10b981;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --bg-surface: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      padding-bottom: 80px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-arabic {
+      font-family: 'Amiri', serif;
+    }
+
+    /* Hero Header */
+    .hero-header {
+      background: linear-gradient(145deg, #022c22, #064e3b 60%, #059669);
+      color: #ffffff;
+      padding: 36px 20px 48px 20px;
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-header::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-logo-wrapper {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    /* Rekening Card */
+    .card-rekening {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+      border-radius: var(--radius-lg);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 30px rgba(6, 78, 59, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: -30px;
+    }
+
+    .card-rekening::after {
+      content: "BSI";
+      position: absolute;
+      right: -10px;
+      bottom: -15px;
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    .rek-number-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+    }
+
+    /* Program Selection Chips / Cards */
+    .program-select-card {
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .program-select-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .program-select-card.active {
+      border-color: var(--primary);
+      background: #ecfdf5;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.15);
+    }
+
+    .program-select-card.active .program-check-badge {
+      display: flex;
+    }
+
+    .program-check-badge {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    /* Quick Nominal Chips */
+    .nominal-chip {
+      border: 1.5px solid var(--border-color);
+      background: white;
+      color: var(--text-main);
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .nominal-chip:hover, .nominal-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+    }
+
+    /* Floating Submit Bar */
+    .sticky-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-color);
+      z-index: 1040;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Kwitansi Styling */
+    .kwitansi-sheet {
+      background: #ffffff;
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .watermark-lunas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: rgba(5, 150, 105, 0.06);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      width: 90%;
+      max-width: 420px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Alert -->
+  <div id="toast-container"></div>
+
+  <!-- HERO HEADER -->
+  <div class="hero-header text-center">
+    <div class="hero-logo-wrapper mb-3">
+      <img src="./logo.png" alt="Logo Sedekah" class="hero-logo-img">
+    </div>
+    <div class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold small mb-2 shadow-sm">
+      <i class="bi bi-heart-fill text-danger me-1"></i> Donasi &amp; Infaq Online
+    </div>
+    <h3 class="fw-bold mb-1 text-white">PESANTREN IMAM SYAFI'I</h3>
+    <p class="text-white-50 small mb-2">Divisi Kesantrian &amp; Sosial Layanan Santri Brebes</p>
+    
+    <div class="font-arabic text-warning fs-5 mt-2" dir="rtl">
+      مَثَلُ الَّذِينَ يُنْفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنْبَتَتْ سَبْعَ سَنَابِلَ
+    </div>
+    <p class="small text-white-50 fst-italic mb-0" style="font-size: 0.76rem;">
+      "Perumpamaan orang yang menginfakkan hartanya di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai..." (QS. Al-Baqarah: 261)
+    </p>
+  </div>
+
+  <div class="container" style="max-width: 600px;">
+    
+    <!-- KARTU REKENING DONASI RESMI -->
+    <div class="card card-rekening p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <div class="p-2 bg-white bg-opacity-15 rounded-3">
+            <i class="bi bi-bank fs-4 text-warning"></i>
+          </div>
+          <div>
+            <div class="text-white-50 small fw-semibold">REKENING RESMI DONASI</div>
+            <div class="fw-bold fs-6 text-white">Bank BSI (Bank Syariah Indonesia)</div>
+          </div>
+        </div>
+        <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 px-2 py-1 small">
+          Terverifikasi
+        </span>
+      </div>
+
+      <div class="rek-number-box d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <div class="text-white-50" style="font-size: 0.72rem; letter-spacing: 0.5px;">NOMOR REKENING</div>
+          <div class="fs-4 fw-bold text-warning font-monospace" id="rek-number-text">7153875752</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-light fw-bold px-3 shadow-sm" onclick="copyRekening('7153875752')">
+          <i class="bi bi-copy me-1 text-primary"></i> Salin
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-end small text-white-50">
+        <div>
+          <div style="font-size: 0.7rem;">ATAS NAMA</div>
+          <div class="fw-bold text-white fs-6">Muhammad Iftah</div>
+        </div>
+        <div class="text-end">
+          <div style="font-size: 0.7rem;">KONFIRMASI WA</div>
+          <a href="https://api.whatsapp.com/send?phone=6282119836050" target="_blank" class="text-warning text-decoration-none fw-bold">
+            <i class="bi bi-whatsapp me-1"></i> 0821-1983-6050
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM PENDAFTARAN DONASI WALI SANTRI -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+      <h5 class="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+        <i class="bi bi-pencil-square text-success"></i> Formulir Donasi Online
+      </h5>
+
+      <form id="form-donasi-online" onsubmit="event.preventDefault(); submitDonasiPwa();">
+        
+        <!-- 1. Pilihan Program Donasi -->
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-muted text-uppercase mb-2">
+            1. Pilih Program Donasi <span class="text-danger">*</span>
+          </label>
+          <div class="row g-2" id="program-options-container">
+            <!-- Program 1: Ifthar -->
+            <div class="col-12 col-sm-6">
+              <div class="program-select-card active" onclick="selectProgram(this, 'Buka Puasa Sunnah (Ifthar)')">
+                <div class="program-check-badge"><i class="bi bi-check"></i></div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 rounded-3 bg-success bg-opacity-10 text-success fs-4">
+                    <i class="bi bi-cup-hot-fill"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold small text-dark">Buka Puasa Sunnah (Ifthar)</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">Ta'jil &amp; buka puasa Senin-Kamis</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program 2: Yatim -->
+            <div class="col-12 col-sm-6">
+              <div class="program-select-card" onclick="selectProgram(this, 'Santri Yatim & Dhuafa')">
+                <div class="program-check-badge"><i class="bi bi-check"></i></div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary fs-4">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold small text-dark">Santri Yatim &amp; Dhuafa</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">Bantuan belajar &amp; santunan</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program 3: Sarana Asrama -->
+            <div class="col-12 col-sm-6">
+              <div class="program-select-card" onclick="selectProgram(this, 'Sarana Kamar & Ibadah')">
+                <div class="program-check-badge"><i class="bi bi-check"></i></div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 rounded-3 bg-warning bg-opacity-15 text-warning fs-4">
+                    <i class="bi bi-house-heart-fill"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold small text-dark">Sarana Kamar &amp; Ibadah</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">Kipas angin, karpet, dispenser</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program 4: Kesehatan -->
+            <div class="col-12 col-sm-6">
+              <div class="program-select-card" onclick="selectProgram(this, 'Kesehatan & Nutrisi Santri')">
+                <div class="program-check-badge"><i class="bi bi-check"></i></div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 rounded-3 bg-danger bg-opacity-10 text-danger fs-4">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold small text-dark">Kesehatan &amp; Nutrisi Santri</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">Suplemen madu &amp; obat UKS</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program 5: Infaq Umum -->
+            <div class="col-12">
+              <div class="program-select-card" onclick="selectProgram(this, 'Infaq & Sedekah Umum')">
+                <div class="program-check-badge"><i class="bi bi-check"></i></div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="p-2 rounded-3 bg-secondary bg-opacity-10 text-dark fs-4">
+                    <i class="bi bi-wallet2"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold small text-dark">Infaq &amp; Sedekah Umum</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">Sedekah sukarela untuk kemaslahatan pondok</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="input-selected-program" value="Buka Puasa Sunnah (Ifthar)">
+        </div>
+
+        <!-- 2. Nominal Donasi -->
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-muted text-uppercase mb-1">
+            2. Jumlah Nominal Donasi <span class="text-danger">*</span>
+          </label>
+          <div class="input-group input-group-lg mb-2">
+            <span class="input-group-text bg-light fw-bold text-success border-end-0">Rp</span>
+            <input type="text" class="form-control fw-bold text-success fs-4 border-start-0" id="input-nominal" placeholder="0" oninput="formatRupiah(this)" required>
+          </div>
+          <div class="d-flex gap-1 flex-wrap">
+            <button type="button" class="nominal-chip" onclick="setNominalChip(50000)">50 Rb</button>
+            <button type="button" class="nominal-chip" onclick="setNominalChip(100000)">100 Rb</button>
+            <button type="button" class="nominal-chip" onclick="setNominalChip(200000)">200 Rb</button>
+            <button type="button" class="nominal-chip" onclick="setNominalChip(500000)">500 Rb</button>
+            <button type="button" class="nominal-chip" onclick="setNominalChip(1000000)">1 Juta</button>
+            <button type="button" class="nominal-chip" onclick="setNominalChip(2000000)">2 Juta</button>
+          </div>
+        </div>
+
+        <!-- 3. Identitas Donatur -->
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-muted text-uppercase mb-2">
+            3. Data Donatur / Wali Santri <span class="text-danger">*</span>
+          </label>
+          
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="small fw-semibold mb-0">Nama Lengkap Donatur</label>
+              <div class="form-check form-check-inline m-0">
+                <input class="form-check-input" type="checkbox" id="check-hamba-allah" onchange="toggleHambaAllah(this)">
+                <label class="form-check-label small text-muted" for="check-hamba-allah">Hamba Allah</label>
+              </div>
+            </div>
+            <input type="text" class="form-control" id="input-nama-donatur" placeholder="Contoh: Bpk. H. Ahmad Subarkah" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="small fw-semibold mb-1">Nomor WhatsApp Aktif <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-success"><i class="bi bi-whatsapp"></i></span>
+              <input type="tel" class="form-control" id="input-no-wa" placeholder="08xxxxxxxxxx (untuk kirim tanda terima resmi)" required>
+            </div>
+            <div class="form-text text-muted" style="font-size: 0.72rem;">Kwitansi dan doa balasan akan dikirim langsung ke WhatsApp ini.</div>
+          </div>
+
+          <!-- Tautkan Santri (Autocomplete) -->
+          <div class="mb-3 position-relative">
+            <label class="small fw-semibold mb-1">Atas Nama Santri (Opsional - Jika Wali Santri)</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person-search"></i></span>
+              <input type="text" class="form-control" id="input-santri-search" placeholder="Ketik nama atau NIS santri..." oninput="searchSantriAutocomplete(this.value)">
+            </div>
+            <input type="hidden" id="input-santri-id">
+            <input type="hidden" id="input-santri-nama">
+            <div id="santri-suggestions-box" class="dropdown-menu w-100 shadow border-0 mt-1" style="max-height: 220px; overflow-y: auto;"></div>
+            <div id="santri-selected-badge" class="mt-2 small text-success fw-semibold d-none">
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="santri-selected-label"></span>
+              <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-2 text-decoration-none" onclick="clearSelectedSantri()">Hapus</button>
+            </div>
+          </div>
+
+          <!-- Doa & Niat -->
+          <div class="mb-3">
+            <label class="small fw-semibold mb-1">Doa, Hajat, atau Niat Donasi</label>
+            <textarea class="form-control" id="input-doa" rows="2" placeholder="Contoh: Semoga ananda istiqomah menghafal Al-Qur'an dan keluarga diberikan keberkahan rezeki"></textarea>
+          </div>
+
+          <!-- Bukti Transfer (Opsional Upload) -->
+          <div class="mb-3">
+            <label class="small fw-semibold mb-1">Bukti Transfer (Opsional)</label>
+            <input type="file" class="form-control form-control-sm" id="input-bukti-file" accept="image/*" onchange="handleFileSelected(this)">
+            <div class="form-text text-muted" style="font-size: 0.72rem;">Dapat dilampirkan langsung atau dikirim menyusul via WhatsApp.</div>
+          </div>
+        </div>
+
+        <!-- Tombol Submit -->
+        <div class="d-grid mb-3">
+          <button type="submit" class="btn btn-success btn-lg py-3 fw-bold shadow" id="btn-submit-donasi">
+            <i class="bi bi-heart-fill me-2"></i> Kirim Donasi Sekarang
+          </button>
+        </div>
+
+        <p class="text-center text-muted small mb-0" style="font-size: 0.75rem;">
+          <i class="bi bi-shield-check text-success me-1"></i> Donasi Anda langsung dicatat secara aman di sistem Kesantrian PP Imam Syafi'i.
+        </p>
+
+      </form>
+    </div>
+
+    <!-- FOOTER INFO -->
+    <div class="text-center text-muted small py-3" style="font-size: 0.78rem;">
+      <div>Pondok Pesantren Imam Syafi'i Brebes</div>
+      <div>Alamat: Jl. KH. Ahmad Dahlan, Pesantunan, Wanasari, Brebes - Jawa Tengah</div>
+      <div class="mt-1">Layanan Donasi WA: <a href="https://api.whatsapp.com/send?phone=6282119836050" class="text-success text-decoration-none fw-bold">0821-1983-6050</a></div>
+    </div>
+
+  </div>
+
+  <!-- MODAL SUKSES & KWITANSI TANDA TERIMA DIGITAL -->
+  <div class="modal fade" id="modalSuksesDonasi" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow rounded-4 overflow-hidden">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-check-circle-fill me-2"></i>Alhamdulillah, Donasi Berhasil Diterima!
+          </h5>
+        </div>
+        <div class="modal-body p-4 bg-light">
+          
+          <div class="text-center mb-3">
+            <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 fs-6 rounded-pill">
+              Tanda Terima Donasi Santri Digital
+            </div>
+          </div>
+
+          <!-- Kwitansi Paper -->
+          <div class="kwitansi-sheet p-4 shadow-sm bg-white mb-3">
+            <div class="watermark-lunas">LUNAS</div>
+            
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: #059669; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem;">
+                  ISB
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0 text-success">PONPES IMAM SYAFII BREBES</h6>
+                  <div class="text-muted small">Divisi Kesantrian &amp; Sosial Layanan</div>
+                </div>
+              </div>
+              <div class="text-end">
+                <div class="text-muted small">No. Kwitansi</div>
+                <div class="fw-bold font-monospace text-dark" id="sukses-kwitansi-id">DNS-XXXXX</div>
+              </div>
+            </div>
+
+            <div class="row g-2 small mb-3">
+              <div class="col-4 text-muted">Tanggal</div>
+              <div class="col-8 fw-semibold" id="sukses-tanggal">-</div>
+
+              <div class="col-4 text-muted">Nama Donatur</div>
+              <div class="col-8 fw-bold text-dark fs-6" id="sukses-donatur">-</div>
+
+              <div class="col-4 text-muted" id="sukses-santri-label">Atas Nama Santri</div>
+              <div class="col-8 fw-semibold" id="sukses-santri">-</div>
+
+              <div class="col-4 text-muted">Program Donasi</div>
+              <div class="col-8 fw-bold text-success" id="sukses-program">-</div>
+
+              <div class="col-4 text-muted">Jumlah Donasi</div>
+              <div class="col-8">
+                <span class="fs-4 fw-bold text-success" id="sukses-nominal">Rp 0</span>
+              </div>
+
+              <div class="col-4 text-muted">Tujuan Rekening</div>
+              <div class="col-8 fw-semibold">Bank BSI 7153875752 (Muhammad Iftah)</div>
+
+              <div class="col-4 text-muted">Catatan &amp; Doa</div>
+              <div class="col-8 fst-italic" id="sukses-doa">-</div>
+            </div>
+
+            <div class="border-top pt-3 text-center">
+              <div class="font-arabic fs-4 text-success fw-bold">جَزَاكُمُ اللهُ خَيْرًا كَثِيْرًا وَبَارَكَ اللهُ فِيْكُمْ</div>
+              <p class="small text-muted mb-0 mt-1">
+                Semoga Allah ﷻ melipatgandakan rezeki Bapak/Ibu dan keluarga, membersihkan harta, serta menjadi pahala jariyah yang kekal mengalir.
+              </p>
+            </div>
+          </div>
+
+          <!-- Alert WhatsApp -->
+          <div class="alert alert-success d-flex align-items-center gap-2 mb-3" role="alert" style="font-size: 0.85rem;">
+            <i class="bi bi-whatsapp fs-4 text-success"></i>
+            <div>
+              <strong>Balasan Resmi Otomatis:</strong> Konfirmasi pendaftaran donasi telah dikirimkan ke WhatsApp Anda.
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer bg-white d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" onclick="resetAndCloseSuccessModal()">
+            Tutup &amp; Kembali
+          </button>
+          <a href="#" id="btn-redirect-wa-admin" target="_blank" class="btn btn-success fw-bold px-3">
+            <i class="bi bi-whatsapp me-1"></i> Konfirmasi ke WA Pengurus
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ── KONFIGURASI BACKEND GOOGLE APPS SCRIPT KESANTRIAN PORTAL ───────────────
+    const GAS_BACKEND_URL = "https://script.google.com/macros/s/AKfycbwELxlXYsX7G_o4A25hi_5bd7dsEO3wIdFJXxmIWV4393O7CiRXyA19tDEFTuYrtmQb/exec";
+    const NOMOR_KONFIRMASI_WA = "6282119836050";
+
+    let santriCache = [];
+    let selectedSantriData = null;
+    let base64BuktiTransfer = "";
+    let deferredPrompt = null;
+
+    // Inisialisasi Service Worker untuk PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker Registered!', reg))
+          .catch((err) => console.log('Service Worker Failed:', err));
+      });
+    }
+
+    // Capture install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSantriCache();
+    });
+
+    // ── CACHE & AUTOCOMPLETE SANTRI ───────────────────────────────────────────
+    function loadSantriCache() {
+      // Coba load dari localStorage dulu
+      const saved = localStorage.getItem('maisya_santri_donasi_cache');
+      if (saved) {
+        try { santriCache = JSON.parse(saved); } catch(e){}
+      }
+
+      // Tarik data terbaru dari backend
+      fetch(`${GAS_BACKEND_URL}?api=getSantriListForDonasi`)
+        .then(res => res.json())
+        .then(res => {
+          if (res && res.success && Array.isArray(res.data)) {
+            santriCache = res.data;
+            localStorage.setItem('maisya_santri_donasi_cache', JSON.stringify(res.data));
+          }
+        })
+        .catch(err => console.log("Offline or cache mode for santri:", err));
+    }
+
+    function searchSantriAutocomplete(query) {
+      const box = document.getElementById('santri-suggestions-box');
+      if (!query || query.trim().length < 2) {
+        box.classList.remove('show');
+        box.innerHTML = '';
+        return;
+      }
+
+      const q = query.toLowerCase().trim();
+      const matches = santriCache.filter(s => {
+        const hay = ((s.nama || '') + ' ' + (s.nis || '') + ' ' + (s.kelas || '')).toLowerCase();
+        return hay.includes(q);
+      }).slice(0, 8);
+
+      if (matches.length === 0) {
+        box.innerHTML = '<div class="dropdown-item text-muted small py-2">Santri tidak ditemukan</div>';
+        box.classList.add('show');
+        return;
+      }
+
+      box.innerHTML = matches.map(s => `
+        <a class="dropdown-item py-2 border-bottom cursor-pointer" onclick="selectSantri('${s.id || s.nis}', '${(s.nama || '').replace(/'/g, "\\'")}', '${s.nis || ''}', '${s.kelas || ''}')">
+          <div class="fw-bold small text-dark">${s.nama}</div>
+          <div class="text-muted" style="font-size: 0.72rem;">NIS: ${s.nis || '-'} | Kelas: ${s.kelas || '-'}</div>
+        </a>
+      `).join('');
+      box.classList.add('show');
+    }
+
+    function selectSantri(id, nama, nis, kelas) {
+      selectedSantriData = { id, nama, nis, kelas };
+      document.getElementById('input-santri-id').value = id;
+      document.getElementById('input-santri-nama').value = nama;
+      document.getElementById('input-santri-search').value = nama;
+
+      const badge = document.getElementById('santri-selected-badge');
+      const label = document.getElementById('santri-selected-label');
+      label.textContent = `Santri Terpilih: ${nama} (NIS: ${nis}, Kelas: ${kelas || '-'})`;
+      badge.classList.remove('d-none');
+
+      const box = document.getElementById('santri-suggestions-box');
+      box.classList.remove('show');
+    }
+
+    function clearSelectedSantri() {
+      selectedSantriData = null;
+      document.getElementById('input-santri-id').value = '';
+      document.getElementById('input-santri-nama').value = '';
+      document.getElementById('input-santri-search').value = '';
+      document.getElementById('santri-selected-badge').classList.add('d-none');
+    }
+
+    // ── PILIHAN PROGRAM DONASI ────────────────────────────────────────────────
+    function selectProgram(cardEl, programName) {
+      document.querySelectorAll('.program-select-card').forEach(c => c.classList.remove('active'));
+      cardEl.classList.add('active');
+      document.getElementById('input-selected-program').value = programName;
+    }
+
+    // ── FORMAT RUPIAH & CHIPS ─────────────────────────────────────────────────
+    function formatRupiah(input) {
+      let value = input.value.replace(/[^,\d]/g, '').toString();
+      let split = value.split(',');
+      let sisa = split[0].length % 3;
+      let rupiah = split[0].substr(0, sisa);
+      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      input.value = rupiah;
+    }
+
+    function setNominalChip(val) {
+      document.getElementById('input-nominal').value = val.toLocaleString('id-ID');
+      document.querySelectorAll('.nominal-chip').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function toggleHambaAllah(checkbox) {
+      const input = document.getElementById('input-nama-donatur');
+      if (checkbox.checked) {
+        input.value = 'Hamba Allah';
+        input.readOnly = true;
+      } else {
+        input.value = '';
+        input.readOnly = false;
+      }
+    }
+
+    function copyRekening(num) {
+      navigator.clipboard.writeText(num).then(() => {
+        showToast("Nomor Rekening BSI " + num + " berhasil disalin ke clipboard!", "success");
+      }).catch(() => {
+        // Fallback
+        const dummy = document.createElement("input");
+        document.body.appendChild(dummy);
+        dummy.value = num;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        showToast("Nomor Rekening " + num + " berhasil disalin!", "success");
+      });
+    }
+
+    function handleFileSelected(input) {
+      base64BuktiTransfer = "";
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          base64BuktiTransfer = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // ── SUBMIT DONASI KE GAS BACKEND ──────────────────────────────────────────
+    function submitDonasiPwa() {
+      const program = document.getElementById('input-selected-program').value;
+      const rawNominal = document.getElementById('input-nominal').value.replace(/[^0-9]/g, '');
+      const namaDonatur = document.getElementById('input-nama-donatur').value.trim();
+      const noWa = document.getElementById('input-no-wa').value.trim();
+      const santriId = document.getElementById('input-santri-id').value;
+      const santriNama = document.getElementById('input-santri-nama').value || document.getElementById('input-santri-search').value.trim();
+      const doa = document.getElementById('input-doa').value.trim();
+
+      const nominal = Number(rawNominal) || 0;
+      if (nominal <= 0) {
+        showToast("Silakan masukkan nominal donasi yang valid!", "warning");
+        return;
+      }
+
+      if (!namaDonatur) {
+        showToast("Silakan isi nama donatur!", "warning");
+        return;
+      }
+
+      if (!noWa || noWa.length < 8) {
+        showToast("Silakan masukkan nomor WhatsApp aktif yang valid!", "warning");
+        return;
+      }
+
+      const payload = {
+        api: 'submitDonasiWali',
+        nama_donatur: namaDonatur,
+        no_wa_donatur: noWa,
+        kategori_donasi: program,
+        nominal: nominal,
+        metode_pembayaran: 'Transfer Bank BSI',
+        bank_tujuan: 'Bank BSI (7153875752 a.n Muhammad Iftah)',
+        id_santri: santriId,
+        nama_santri: santriNama,
+        keterangan: doa,
+        bukti_transfer_base64: base64BuktiTransfer
+      };
+
+      const btnSubmit = document.getElementById('btn-submit-donasi');
+      const originalText = btnSubmit.innerHTML;
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Menyimpan Donasi...`;
+
+      fetch(GAS_BACKEND_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'data=' + encodeURIComponent(JSON.stringify(payload))
+      })
+      .then(res => res.json())
+      .then(res => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = originalText;
+
+        if (res && res.success) {
+          showSuccessModal(res, payload);
+        } else {
+          showToast("Gagal mencatat donasi: " + (res && res.message ? res.message : 'Terjadi kesalahan sistem.'), "danger");
+        }
+      })
+      .catch(err => {
+        // Jika fetch POST CORS terhalang, coba via GET query string
+        fetch(`${GAS_BACKEND_URL}?api=submitDonasiWali&nama_donatur=${encodeURIComponent(payload.nama_donatur)}&no_wa_donatur=${encodeURIComponent(payload.no_wa_donatur)}&kategori_donasi=${encodeURIComponent(payload.kategori_donasi)}&nominal=${payload.nominal}&nama_santri=${encodeURIComponent(payload.nama_santri)}&keterangan=${encodeURIComponent(payload.keterangan)}`)
+          .then(r => r.json())
+          .then(res2 => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = originalText;
+            if (res2 && res2.success) {
+              showSuccessModal(res2, payload);
+            } else {
+              showToast("Gagal: " + (res2.message || 'Silakan ulangi.'), "danger");
+            }
+          })
+          .catch(err2 => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = originalText;
+            showToast("Koneksi gagal. Silakan periksa jaringan internet Anda.", "danger");
+          });
+      });
+    }
+
+    function showSuccessModal(response, payload) {
+      const now = new Date();
+      const tglStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      document.getElementById('sukses-kwitansi-id').textContent = response.id_donasi || 'DNS-TERCATAT';
+      document.getElementById('sukses-tanggal').textContent = tglStr;
+      document.getElementById('sukses-donatur').textContent = payload.nama_donatur;
+      document.getElementById('sukses-program').textContent = payload.kategori_donasi;
+      document.getElementById('sukses-nominal').textContent = 'Rp ' + Number(payload.nominal).toLocaleString('id-ID');
+      
+      const elSantri = document.getElementById('sukses-santri');
+      const elSantriLbl = document.getElementById('sukses-santri-label');
+      if (payload.nama_santri) {
+        elSantri.textContent = payload.nama_santri;
+        elSantri.style.display = 'block';
+        elSantriLbl.style.display = 'block';
+      } else {
+        elSantri.style.display = 'none';
+        elSantriLbl.style.display = 'none';
+      }
+
+      document.getElementById('sukses-doa').textContent = payload.keterangan ? `"${payload.keterangan}"` : '-';
+
+      // Link WA Konfirmasi ke Pengurus Kesantrian (0821-1983-6050)
+      const btnWaAdmin = document.getElementById('btn-redirect-wa-admin');
+      if (response.wa_confirm_url) {
+        btnWaAdmin.href = response.wa_confirm_url;
+      } else {
+        const santriText = payload.nama_santri ? ` (Wali dari: ${payload.nama_santri})` : '';
+        const waText = `﷽\nAssalamu'alaikum Warahmatullahi Wabarakatuh Pengurus Kesantrian ISB,\n\nSaya telah melakukan transfer donasi:\n📋 No. Registrasi: ${response.id_donasi || '-'}\n👤 Nama Donatur: ${payload.nama_donatur}${santriText}\n🤲 Program: ${payload.kategori_donasi}\n💰 Nominal: Rp ${Number(payload.nominal).toLocaleString('id-ID')}\n💳 Tujuan: BSI 7153875752 (Muhammad Iftah)\n\nBerikut saya lampirkan bukti transfer. Jazakumullahu khairan katsiran.`;
+        btnWaAdmin.href = `https://api.whatsapp.com/send?phone=${NOMOR_KONFIRMASI_WA}&text=${encodeURIComponent(waText)}`;
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById('modalSuksesDonasi'));
+      modal.show();
+    }
+
+    function resetAndCloseSuccessModal() {
+      const modalEl = document.getElementById('modalSuksesDonasi');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (modalInstance) modalInstance.hide();
+
+      document.getElementById('form-donasi-online').reset();
+      clearSelectedSantri();
+      base64BuktiTransfer = "";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgClass = type === 'success' ? 'bg-success' : (type === 'danger' ? 'bg-danger' : (type === 'warning' ? 'bg-warning text-dark' : 'bg-dark'));
+      
+      toast.className = `alert ${bgClass} text-white shadow-lg py-2 px-3 rounded-3 mb-2 d-flex align-items-center justify-content-between fade show`;
+      toast.style.pointerEvents = 'auto';
+      toast.innerHTML = `
+        <div class="small fw-semibold"><i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-info-circle-fill'} me-2"></i>${message}</div>
+        <button type="button" class="btn-close btn-close-white ms-2" onclick="this.parentElement.remove()"></button>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 200);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

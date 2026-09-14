@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185" />
+      <stop offset="100%" stop-color="#e11d48" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#022c22" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Background Base with Rounded App Icon Squircle -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+  
+  <!-- Outer Decorative Ring -->
+  <circle cx="256" cy="256" r="216" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-opacity="0.4" stroke-dasharray="8 6" />
+  <circle cx="256" cy="256" r="202" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.2" />
+
+  <!-- Radiance Rays -->
+  <g opacity="0.25">
+    <circle cx="256" cy="185" r="70" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4 8" />
+    <path d="M 256,90 L 256,115" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 256,255 L 256,280" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 175,185 L 150,185" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 337,185 L 362,185" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 198,127 L 180,109" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 314,243 L 332,261" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 198,243 L 180,261" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 314,127 L 332,109" stroke="#fef08a" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Glowing Heart with Crescent Moon and Star (Sedekah & Barakah) -->
+  <g filter="url(#glow)">
+    <!-- Golden Coin / Radiance Halo -->
+    <circle cx="256" cy="180" r="54" fill="url(#goldGrad)" />
+    <circle cx="256" cy="180" r="48" fill="#ffffff" fill-opacity="0.15" />
+    
+    <!-- Red/Pink Vibrant Heart inside Sedekah Coin -->
+    <path d="M 256,198 C 256,198 226,178 226,160 C 226,146 238,136 250,136 C 254,136 256,139 256,139 C 256,139 258,136 262,136 C 274,136 286,146 286,160 C 286,178 256,198 256,198 Z" fill="url(#heartGrad)" />
+    
+    <!-- Crescent Moon Accent -->
+    <path d="M 264,152 A 16,16 0 1,1 248,168 A 13,13 0 1,0 264,152 Z" fill="#ffffff" opacity="0.9" />
+  </g>
+
+  <!-- Cupped Giving Hands (Tangan Sedekah) -->
+  <g filter="url(#shadow)">
+    <!-- Left Hand -->
+    <path d="M 120,380 C 130,345 165,305 210,290 C 228,284 246,290 252,300 C 258,310 250,324 235,332 C 195,355 178,375 165,410 C 158,425 130,410 120,380 Z" fill="#ffffff" />
+    <!-- Left Thumb and Palm Details -->
+    <path d="M 170,332 C 190,305 220,270 248,272 C 256,272 258,282 250,288 C 225,308 198,340 185,360 Z" fill="#f8fafc" />
+    <path d="M 130,385 C 150,360 200,315 240,315" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Right Hand (Mirrored & Interlocking in prayer/giving) -->
+    <path d="M 392,380 C 382,345 347,305 302,290 C 284,284 266,290 260,300 C 254,310 262,324 277,332 C 317,355 334,375 347,410 C 354,425 382,410 392,380 Z" fill="#ffffff" />
+    <!-- Right Thumb and Palm Details -->
+    <path d="M 342,332 C 322,305 292,270 264,272 C 256,272 254,282 262,288 C 287,308 314,340 327,360 Z" fill="#f8fafc" />
+    <path d="M 382,385 C 362,360 312,315 272,315" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Center Droplet / Nourishment Light -->
+    <circle cx="256" cy="245" r="7" fill="url(#goldGrad)" />
+    <circle cx="256" cy="225" r="4.5" fill="url(#goldGrad)" opacity="0.8" />
+  </g>
+
+  <!-- Typography Label: DONASI SANTRI -->
+  <g text-anchor="middle">
+    <!-- Arabic Calligraphy Text: الصدقة -->
+    <text x="256" y="440" font-family="'Amiri', 'Traditional Arabic', serif" font-size="28" font-weight="bold" fill="url(#goldGrad)">الـصَّـدَقَـة</text>
+    <text x="256" y="470" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="16" font-weight="800" letter-spacing="3" fill="#ffffff" opacity="0.95">DONASI SANTRI ISB</text>
+  </g>
+</svg>

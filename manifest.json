@@ -1,0 +1,24 @@
+{
+  "name": "Donasi & Infaq Santri - PP Imam Syafii Brebes",
+  "short_name": "Donasi Santri",
+  "description": "Aplikasi PWA Pendataan & Donasi Online Santri Pondok Pesantren Imam Syafi'i Brebes",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
