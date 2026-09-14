@@ -870,15 +870,6 @@
     let base64BuktiTransfer = "";
     let publicReportCache = null;
 
-    // Service Worker untuk PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('SW Registered', reg))
-          .catch((err) => console.log('SW Failed', err));
-      });
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       // Set filter bulan default ke bulan berjalan
       const now = new Date();
@@ -903,15 +894,29 @@
           if (res && res.success && res.data) {
             publicReportCache = res.data;
             renderTransparencyDashboard(publicReportCache);
+          } else {
+            renderDefaultFallbackDashboard();
           }
         })
         .catch(err => {
-          console.log("Error memuat laporan publik:", err);
-          // Fallback tampilan jika offline
-          if (!publicReportCache) {
-            document.getElementById('tbody-rekap-kelas').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Silakan periksa koneksi internet untuk memuat data laporan terbaru.</td></tr>';
-          }
+          console.log("Koneksi offline atau lambat:", err);
+          renderDefaultFallbackDashboard();
         });
+    }
+
+    function renderDefaultFallbackDashboard() {
+      const standardClasses = [
+        { kelas: '7 SMP', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: '8 SMP', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: '9 SMP', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: '10 SMA', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: '11 SMA', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: '12 SMA', totalNominal: 0, countDonasi: 0, persen: 0 },
+        { kelas: 'Umum / Simpatisan / Hamba Allah', totalNominal: 0, countDonasi: 0, persen: 0 }
+      ];
+      renderRekapKelasTable(standardClasses, 0);
+      renderRiwayatPenerimaanTable([]);
+      renderRiwayatPenggunaanTable([]);
     }
 
     function applyPublicFilter() {
@@ -1445,35 +1450,25 @@
       toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
     }
 
-    // Registrasi & Auto-Update Service Worker (Bypass Cache Lama)
+    // Registrasi Service Worker PWA (Stabil & Aman)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
+        // Bersihkan cache lama v1
         if ('caches' in window) {
           caches.keys().then((names) => {
             names.forEach((name) => {
               if (name === 'maisya-donasi-v1') {
                 caches.delete(name);
-                console.log('Cache lama v1 berhasil dibersihkan');
               }
             });
           });
         }
 
-        navigator.serviceWorker.register('./sw.js?t=20260914b')
+        navigator.serviceWorker.register('./sw.js')
           .then((reg) => {
-            reg.update();
-            reg.onupdatefound = () => {
-              const installingWorker = reg.installing;
-              if (installingWorker) {
-                installingWorker.onstatechange = () => {
-                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    window.location.reload();
-                  }
-                };
-              }
-            };
+            console.log('Service Worker aktif:', reg.scope);
           })
-          .catch((err) => console.log('SW reg error:', err));
+          .catch((err) => console.log('SW Registration error:', err));
       });
     }
   </script>
