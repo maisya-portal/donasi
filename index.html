@@ -1444,6 +1444,38 @@
       toast.show();
       toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
     }
+
+    // Registrasi & Auto-Update Service Worker (Bypass Cache Lama)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        if ('caches' in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              if (name === 'maisya-donasi-v1') {
+                caches.delete(name);
+                console.log('Cache lama v1 berhasil dibersihkan');
+              }
+            });
+          });
+        }
+
+        navigator.serviceWorker.register('./sw.js?t=20260914b')
+          .then((reg) => {
+            reg.update();
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              if (installingWorker) {
+                installingWorker.onstatechange = () => {
+                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    window.location.reload();
+                  }
+                };
+              }
+            };
+          })
+          .catch((err) => console.log('SW reg error:', err));
+      });
+    }
   </script>
 </body>
 </html>
