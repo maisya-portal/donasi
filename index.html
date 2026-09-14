@@ -391,8 +391,9 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
       <div class="row g-2 align-items-center">
         <div class="col-12 col-sm-6">
-          <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="shareLaporanToWhatsApp()">
+          <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="aksesBagikanLaporanAdmin()">
             <i class="bi bi-whatsapp fs-6"></i> Bagikan Laporan ke Grup WA
+            <span class="badge bg-dark bg-opacity-25 text-white small ms-1" style="font-size: 0.68rem;"><i class="bi bi-lock-fill me-1"></i>PIN Admin</span>
           </button>
         </div>
         <div class="col-6 col-sm-3">
@@ -857,6 +858,47 @@
     </div>
   </div>
 
+  <!-- MODAL VERIFIKASI PIN ADMIN KESANTRIAN -->
+  <div class="modal fade" id="modalVerifikasiPinAdmin" tabindex="-1" aria-labelledby="modalPinLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 360px;">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0 pb-0 pt-4 px-4 text-center d-block position-relative">
+          <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 58px; height: 58px; background: rgba(5, 150, 105, 0.12); color: #059669;">
+            <i class="bi bi-shield-lock-fill fs-2"></i>
+          </div>
+          <h5 class="fw-bold mb-1 text-dark" id="modalPinLabel">Akses Khusus Admin</h5>
+          <p class="text-muted small mb-0" style="font-size: 0.78rem;">
+            Fitur ini khusus untuk Admin / Pengurus Kesantrian. Masukkan PIN untuk melanjutkan.
+          </p>
+        </div>
+        <div class="modal-body p-4">
+          <form id="form-pin-admin" onsubmit="submitVerifikasiPin(event)">
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase mb-1" style="font-size: 0.7rem;">PIN Keamanan</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-key-fill text-muted"></i></span>
+                <input type="password" id="input-pin-admin" class="form-control text-center font-monospace fs-4 fw-bold border-start-0 border-end-0" maxlength="8" placeholder="••••••" autocomplete="off" required>
+                <button class="btn btn-outline-secondary border-start-0 bg-light" type="button" onclick="togglePinVisibility()"><i class="bi bi-eye" id="icon-toggle-pin"></i></button>
+              </div>
+              <div id="pin-error-msg" class="text-danger small fw-semibold mt-2 text-center d-none" style="font-size: 0.76rem;">
+                <i class="bi bi-exclamation-circle-fill me-1"></i> PIN tidak valid! Akses ditolak.
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-unlock-fill"></i> Verifikasi PIN
+            </button>
+          </form>
+        </div>
+        <div class="modal-footer border-0 pt-0 pb-3 justify-content-center">
+          <small class="text-muted" style="font-size: 0.7rem;">
+            <i class="bi bi-info-circle me-1"></i> Divisi Kesantrian Putra PPIS Brebes
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1113,6 +1155,80 @@
 
       const modal = new bootstrap.Modal(modalEl);
       modal.show();
+    }
+
+    // ── KONTROL AKSES & VERIFIKASI PIN ADMIN ─────────────────────────────────
+    const ADMIN_PIN_CODE = "010387";
+
+    function aksesBagikanLaporanAdmin() {
+      // Cek apakah sudah terverifikasi pada sesi browser aktif saat ini
+      const isAuth = sessionStorage.getItem('maisya_donasi_admin_auth') === 'true';
+      if (isAuth) {
+        shareLaporanToWhatsApp();
+        return;
+      }
+
+      // Tampilkan form verifikasi PIN Admin
+      const pinInput = document.getElementById('input-pin-admin');
+      const errBox = document.getElementById('pin-error-msg');
+      if (pinInput) {
+        pinInput.value = '';
+        pinInput.classList.remove('is-invalid');
+      }
+      if (errBox) errBox.classList.add('d-none');
+
+      const modalEl = document.getElementById('modalVerifikasiPinAdmin');
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      setTimeout(() => {
+        if (pinInput) pinInput.focus();
+      }, 350);
+    }
+
+    function togglePinVisibility() {
+      const pinInput = document.getElementById('input-pin-admin');
+      const icon = document.getElementById('icon-toggle-pin');
+      if (!pinInput || !icon) return;
+      if (pinInput.type === 'password') {
+        pinInput.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      } else {
+        pinInput.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      }
+    }
+
+    function submitVerifikasiPin(e) {
+      if (e) e.preventDefault();
+      const pinInput = document.getElementById('input-pin-admin');
+      const errBox = document.getElementById('pin-error-msg');
+      const enteredPin = pinInput ? pinInput.value.trim() : '';
+
+      if (enteredPin === ADMIN_PIN_CODE) {
+        sessionStorage.setItem('maisya_donasi_admin_auth', 'true');
+        if (errBox) errBox.classList.add('d-none');
+        
+        const modalEl = document.getElementById('modalVerifikasiPinAdmin');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        showToast("Verifikasi Berhasil! Akses Admin Terbuka.", "success");
+        setTimeout(shareLaporanToWhatsApp, 350);
+      } else {
+        if (errBox) {
+          errBox.textContent = "PIN tidak valid! Fitur ini khusus untuk Admin / Pengurus Kesantrian.";
+          errBox.classList.remove('d-none');
+        }
+        if (pinInput) {
+          pinInput.classList.add('is-invalid');
+          pinInput.value = '';
+          pinInput.focus();
+          setTimeout(() => pinInput.classList.remove('is-invalid'), 2000);
+        }
+      }
     }
 
     // ── SHARE LAPORAN TRANSPARANSI KE WHATSAPP ────────────────────────────────
