@@ -1377,11 +1377,15 @@
         sumKeluar += (Number(item.nominal_keluar) || 0);
         const nomFmt = 'Rp ' + (Number(item.nominal_keluar) || 0).toLocaleString('id-ID');
         
-        let notaBtn = '<span class="text-muted small">-</span>';
-        if (item.nota_bukti_url && item.nota_bukti_url.trim() !== '') {
-          const safeUrl = item.nota_bukti_url.replace(/"/g, '&quot;');
-          const safeTitle = (item.judul_penyaluran || 'Nota Belanja').replace(/"/g, '&quot;');
-          notaBtn = `<button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold" onclick="viewBuktiNota('${safeUrl}', '${safeTitle}')"><i class="bi bi-receipt me-1"></i>Nota</button>`;
+        const rawNotaUrl = (item.nota_bukti_url || '').trim();
+        const safeTitle = (item.judul_penyaluran || 'Nota Belanja').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        
+        let notaBtn = '';
+        if (rawNotaUrl && rawNotaUrl !== '-' && rawNotaUrl !== 'null' && rawNotaUrl !== 'undefined') {
+          const safeUrl = rawNotaUrl.replace(/"/g, '&quot;').replace(/'/g, "\\'");
+          notaBtn = `<button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold d-inline-flex align-items-center gap-1 shadow-2xs" onclick="bukaBuktiNotaLangsung('${safeUrl}', '${safeTitle}')" title="Klik untuk langsung membuka bukti nota"><i class="bi bi-receipt"></i> Nota</button>`;
+        } else {
+          notaBtn = `<button type="button" class="btn btn-sm btn-light text-muted border py-0 px-2 fw-semibold d-inline-flex align-items-center gap-1 opacity-75" onclick="bukaBuktiNotaLangsung('', '${safeTitle}')" title="Bukti nota belum tersedia - Klik untuk info"><i class="bi bi-receipt text-muted"></i> Nota <i class="bi bi-exclamation-circle text-danger ms-0.5" style="font-size: 0.72rem;"></i></button>`;
         }
 
         const tr = document.createElement('tr');
@@ -1399,33 +1403,44 @@
       if (tfootNom) tfootNom.textContent = 'Rp ' + sumKeluar.toLocaleString('id-ID');
     }
 
-    // Modal Bukti Nota / Foto Penyaluran
-    function viewBuktiNota(url, title) {
-      const modalEl = document.getElementById('modalBuktiNota');
-      const titleEl = document.getElementById('modalBuktiTitle');
-      const contentEl = document.getElementById('modalBuktiContent');
-      const linkEl = document.getElementById('modalBuktiDirectLink');
+    // ── BUKA BUKTI NOTA LANGSUNG SECARA EFISIEN (TANPA MODAL) & DETEKSI ERROR ──
+    function bukaBuktiNotaLangsung(url, title) {
+      const cleanTitle = title || 'kegiatan ini';
 
-      titleEl.innerHTML = `<i class="bi bi-receipt me-2 text-warning"></i>${title}`;
-      linkEl.href = url;
-
-      // Jika URL adalah gambar langsung
-      if (url.match(/\.(jpeg|jpg|png|webp|gif)($|\?)/i)) {
-        contentEl.innerHTML = `<img src="${url}" class="img-fluid rounded-3 shadow-sm" style="max-height: 500px;" alt="Bukti Penyaluran">`;
-      } else {
-        contentEl.innerHTML = `
-          <div class="py-4">
-            <i class="bi bi-file-earmark-check fs-1 text-primary d-block mb-3"></i>
-            <p class="mb-3 text-muted">Dokumentasi / nota bukti tersedia melalui tautan resmi terverifikasi:</p>
-            <a href="${url}" target="_blank" class="btn btn-primary fw-bold px-4 py-2">
-              <i class="bi bi-box-arrow-up-right me-1"></i> Buka Bukti Nota / Foto Kegiatan
-            </a>
-          </div>
-        `;
+      // 1. Cek jika tautan nota belum diunggah atau kosong
+      if (!url || typeof url !== 'string' || url.trim() === '' || url.trim() === '-' || url.trim() === 'null' || url.trim() === 'undefined') {
+        showToast("⚠️ Bukti nota belum diunggah untuk \"" + cleanTitle + "\". Petugas kas belum melampirkan file/foto bukti nota.", "warning");
+        return;
       }
 
-      const modal = new bootstrap.Modal(modalEl);
-      modal.show();
+      const cleanUrl = url.trim();
+
+      // 2. Cek validitas skema URL (harus diawali http://, https://, atau format data gambar)
+      const isHttpUrl = /^(https?:\/\/)/i.test(cleanUrl);
+      const isDataUrl = /^(data:image\/[a-zA-Z]+;base64,|blob:)/i.test(cleanUrl);
+
+      if (!isHttpUrl && !isDataUrl) {
+        showToast("❌ Tautan bukti nota tidak valid: \"" + cleanUrl + "\". Tautan harus diawali dengan http:// atau https://.", "danger");
+        return;
+      }
+
+      // 3. Tampilkan feedback singkat dan langsung buka di tab baru
+      showToast("Membuka tautan bukti nota untuk \"" + cleanTitle + "\"...", "info");
+
+      try {
+        const newTab = window.open(cleanUrl, '_blank', 'noopener,noreferrer');
+        if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+          // Jika pop-up browser diblokir, alihkan langsung
+          window.location.href = cleanUrl;
+        }
+      } catch (err) {
+        showToast("❌ Gagal membuka tautan bukti nota: " + (err ? err.message : "Terjadi kendala pada browser"), "danger");
+      }
+    }
+
+    // Alias untuk kompatibilitas fungsi lama jika ada yang memanggil
+    function viewBuktiNota(url, title) {
+      bukaBuktiNotaLangsung(url, title);
     }
 
     // ── KONTROL AKSES & VERIFIKASI PIN ADMIN ─────────────────────────────────
