@@ -287,26 +287,173 @@
       font-size: 0.85rem;
     }
 
-    /* Toast Notification */
-    #toast-container {
+    /* Class badge colors */
+    .bg-purple {
+      background-color: #7c3aed !important;
+      color: #ffffff !important;
+    }
+    .bg-teal {
+      background-color: #0d9488 !important;
+      color: #ffffff !important;
+    }
+    .bg-indigo {
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+    }
+
+    /* Table hide donatur column */
+    .table-hide-donatur .col-donatur {
+      display: none !important;
+    }
+
+    /* Beautiful Loading Page Overlay */
+    #page-loader-overlay {
       position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      width: 90%;
-      max-width: 440px;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 30%, #065f46 0%, #064e3b 40%, #022c22 100%);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #page-loader-overlay.loader-hidden {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(1.05);
       pointer-events: none;
+    }
+
+    .loader-ring-wrapper {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .loader-aura {
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, rgba(16, 185, 129, 0.15) 60%, transparent 75%);
+      animation: pulseAura 2.2s infinite ease-in-out;
+    }
+
+    .loader-spinner-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.12);
+      border-top-color: #f59e0b;
+      border-right-color: #10b981;
+      animation: spinRing 1.5s linear infinite;
+    }
+
+    .loader-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #ffffff;
+      padding: 6px;
+      border: 3px solid #f59e0b;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      object-fit: contain;
+      z-index: 2;
+      animation: breatheLogo 2.4s infinite ease-in-out;
+    }
+
+    .loader-progress-track {
+      width: 220px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 18px;
+      position: relative;
+    }
+
+    .loader-progress-bar {
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b);
+      border-radius: 10px;
+      position: absolute;
+      animation: shimmerProgress 1.4s infinite ease-in-out;
+    }
+
+    @keyframes spinRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseAura {
+      0%, 100% { transform: scale(0.95); opacity: 0.5; }
+      50% { transform: scale(1.15); opacity: 0.9; }
+    }
+
+    @keyframes breatheLogo {
+      0%, 100% { transform: scale(0.98); }
+      50% { transform: scale(1.04); }
+    }
+
+    @keyframes shimmerProgress {
+      0% { left: -40%; width: 30%; }
+      50% { width: 60%; }
+      100% { left: 110%; width: 40%; }
     }
   </style>
 </head>
 <body>
 
+  <!-- BEAUTIFUL LOADING PAGE OVERLAY -->
+  <div id="page-loader-overlay">
+    <div class="loader-ring-wrapper">
+      <div class="loader-aura"></div>
+      <div class="loader-spinner-ring"></div>
+      <img src="https://lh3.googleusercontent.com/d/1gHUjCj4lXfwJn1Fj11O1peAVjT3Xosqh" alt="Logo Kesantrian PPTQ ISB" class="loader-logo">
+    </div>
+    
+    <div class="font-arabic text-warning fs-4 mb-1" dir="rtl" style="font-family: 'Amiri', serif;">
+      بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+    </div>
+    <h6 class="fw-bold text-white mb-1" style="letter-spacing: 0.8px; font-size: 0.95rem;">
+      LAPORAN DATA DONASI SANTRI
+    </h6>
+    <div class="text-white-50 small mb-2 text-center px-3" style="font-size: 0.78rem; max-width: 380px;">
+      PPTQ Imam Syafi'i Brebes &bull; Divisi Kesantrian Putra
+    </div>
+
+    <div class="loader-progress-track">
+      <div class="loader-progress-bar"></div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 mt-3 text-white-50" style="font-size: 0.76rem;">
+      <span class="spinner-grow spinner-grow-sm text-warning" role="status" style="width: 8px; height: 8px;"></span>
+      <span id="loader-status-text">Memuat data transparansi &amp; kas...</span>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div id="toast-container"></div>
 
   <!-- HERO HEADER RESMI -->
-  <div class="hero-header text-center">
+  <div class="hero-header text-center position-relative">
+    <!-- Tombol Admin Page di Pojok Kanan Atas Sesuai Permintaan -->
+    <div class="position-absolute top-0 end-0 p-3" style="z-index: 20;">
+      <button id="btn-toggle-admin-page" class="btn btn-sm rounded-pill px-3 py-1.5 shadow-sm d-flex align-items-center gap-1.5" onclick="toggleAdminPageSection()" style="background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease;" title="Buka Panel Khusus Admin">
+        <i class="bi bi-shield-lock-fill text-warning" id="icon-admin-page"></i>
+        <span id="text-admin-page">Admin Page</span>
+      </button>
+    </div>
+
     <div class="hero-logo-box">
       <img src="https://lh3.googleusercontent.com/d/1gHUjCj4lXfwJn1Fj11O1peAVjT3Xosqh" alt="Logo Kesantrian PPTQ ISB" class="hero-logo-img">
     </div>
@@ -387,22 +534,44 @@
       </div>
     </div>
 
-    <!-- TOOLBAR AKSI CEPAT: BAGIKAN KE WA & FILTER -->
+    <!-- PANEL KHUSUS ADMIN: BAGIKAN KE WA (DEFAULT HIDE / BERSIH) -->
+    <div id="section-admin-wa" class="d-none mb-3">
+      <div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-success border-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 small">
+              <i class="bi bi-shield-lock-fill text-warning me-1"></i> Panel Admin Page
+            </span>
+            <small class="text-muted fw-semibold" style="font-size: 0.75rem;">Broadcast Laporan Kas ke Grup WA</small>
+          </div>
+          <button type="button" class="btn-close" style="font-size: 0.7rem;" onclick="toggleAdminPageSection(false)" title="Tutup Panel Admin"></button>
+        </div>
+        <p class="text-muted small mb-3" style="font-size: 0.76rem;">
+          Fitur ini membuat ringkasan teks laporan donasi terverifikasi untuk disebarkan ke grup WhatsApp wali santri. Memerlukan autentikasi PIN admin.
+        </p>
+        <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="aksesBagikanLaporanAdmin()">
+          <i class="bi bi-whatsapp fs-6"></i> Bagikan Laporan ke Grup WA
+          <span class="badge bg-dark bg-opacity-25 text-white small ms-1" style="font-size: 0.68rem;"><i class="bi bi-lock-fill me-1"></i>PIN Admin</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TOOLBAR FILTER BULAN & PROGRAM (BERSIH & RAPI UNTUK PUBLIK / WALI SANTRI) -->
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
       <div class="row g-2 align-items-center">
-        <div class="col-12 col-sm-6">
-          <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="aksesBagikanLaporanAdmin()">
-            <i class="bi bi-whatsapp fs-6"></i> Bagikan Laporan ke Grup WA
-            <span class="badge bg-dark bg-opacity-25 text-white small ms-1" style="font-size: 0.68rem;"><i class="bi bi-lock-fill me-1"></i>PIN Admin</span>
-          </button>
+        <div class="col-6 col-sm-6">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-funnel text-success"></i></span>
+            <select class="form-select form-select-sm border-start-0" id="public-filter-program" onchange="applyPublicFilter()">
+              <option value="">Semua Program Donasi</option>
+            </select>
+          </div>
         </div>
-        <div class="col-6 col-sm-3">
-          <select class="form-select form-select-sm" id="public-filter-program" onchange="applyPublicFilter()">
-            <option value="">Semua Program</option>
-          </select>
-        </div>
-        <div class="col-6 col-sm-3">
-          <input type="month" class="form-control form-control-sm" id="public-filter-bulan" onchange="applyPublicFilter()">
+        <div class="col-6 col-sm-6">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-calendar-event text-primary"></i></span>
+            <input type="month" class="form-control form-control-sm border-start-0" id="public-filter-bulan" onchange="applyPublicFilter()">
+          </div>
         </div>
       </div>
     </div>
@@ -464,18 +633,24 @@
               </h6>
               <small class="text-muted" style="font-size: 0.75rem;">Data mutasi infaq/donasi yang telah diverifikasi</small>
             </div>
-            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 small" id="badge-count-mutasi">0 Data</span>
+            <div class="d-flex align-items-center gap-2">
+              <button id="btn-toggle-donatur" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1 shadow-2xs" onclick="toggleKolomDonatur()" title="Sembunyikan / Tampilkan Nama Donatur">
+                <i class="bi bi-eye-slash" id="icon-toggle-donatur"></i>
+                <span id="text-toggle-donatur" style="font-size: 0.72rem; font-weight: 600;">Nama Donatur</span>
+              </button>
+              <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 small" id="badge-count-mutasi">0 Data</span>
+            </div>
           </div>
 
           <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
-            <table class="table table-hover align-middle table-custom mb-0">
+            <table class="table table-hover align-middle table-custom mb-0 table-hide-donatur" id="table-riwayat-penerimaan">
               <thead class="sticky-top">
                 <tr>
-                  <th>Tanggal</th>
+                  <th style="width: 100px;">Tanggal</th>
                   <th>Program Donasi</th>
-                  <th>Nama Donatur / Muhsinin</th>
-                  <th class="text-end">Nominal</th>
-                  <th class="text-center">Status</th>
+                  <th class="col-donatur">Nama Donatur / Muhsinin</th>
+                  <th class="text-end" style="width: 120px;">Nominal</th>
+                  <th class="text-center" style="width: 90px;">Status</th>
                 </tr>
               </thead>
               <tbody id="tbody-riwayat-penerimaan">
@@ -911,8 +1086,14 @@
     let selectedSantriData = null;
     let base64BuktiTransfer = "";
     let publicReportCache = null;
+    let isInitialPageLoad = true;
+    let isAdminPageShown = false;
+    let isDonaturColumnVisible = false;
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Fallback timer loader (maksimal 7 detik)
+      setTimeout(hideInitialLoader, 7000);
+
       // Set filter bulan default ke bulan berjalan
       const now = new Date();
       const curMonth = now.toISOString().substring(0, 7);
@@ -923,10 +1104,92 @@
       loadPublicLaporanData();
     });
 
+    // ── KELOLA TOGGLE ADMIN PAGE & KOLOM DONATUR ──────────────────────────────
+    function toggleAdminPageSection(forceState) {
+      if (typeof forceState === 'boolean') {
+        isAdminPageShown = forceState;
+      } else {
+        isAdminPageShown = !isAdminPageShown;
+      }
+
+      const section = document.getElementById('section-admin-wa');
+      const btn = document.getElementById('btn-toggle-admin-page');
+      const icon = document.getElementById('icon-admin-page');
+      const text = document.getElementById('text-admin-page');
+
+      if (section) {
+        if (isAdminPageShown) {
+          section.classList.remove('d-none');
+          if (btn) {
+            btn.style.background = 'rgba(245, 158, 11, 0.95)';
+            btn.style.color = '#0f172a';
+            btn.style.borderColor = '#f59e0b';
+          }
+          if (icon) {
+            icon.className = 'bi bi-shield-check text-dark';
+          }
+          if (text) text.textContent = 'Tutup Admin';
+          section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          section.classList.add('d-none');
+          if (btn) {
+            btn.style.background = 'rgba(0, 0, 0, 0.35)';
+            btn.style.color = '#ffffff';
+            btn.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+          }
+          if (icon) {
+            icon.className = 'bi bi-shield-lock-fill text-warning';
+          }
+          if (text) text.textContent = 'Admin Page';
+        }
+      }
+    }
+
+    function toggleKolomDonatur() {
+      isDonaturColumnVisible = !isDonaturColumnVisible;
+      const table = document.getElementById('table-riwayat-penerimaan');
+      const icon = document.getElementById('icon-toggle-donatur');
+      const text = document.getElementById('text-toggle-donatur');
+      const btn = document.getElementById('btn-toggle-donatur');
+
+      if (table) {
+        if (isDonaturColumnVisible) {
+          table.classList.remove('table-hide-donatur');
+          if (icon) icon.className = 'bi bi-eye-fill text-success';
+          if (text) text.textContent = 'Sembunyikan Donatur';
+          if (btn) {
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-outline-success');
+          }
+        } else {
+          table.classList.add('table-hide-donatur');
+          if (icon) icon.className = 'bi bi-eye-slash';
+          if (text) text.textContent = 'Nama Donatur';
+          if (btn) {
+            btn.classList.remove('btn-outline-success');
+            btn.classList.add('btn-outline-secondary');
+          }
+        }
+      }
+    }
+
+    function hideInitialLoader() {
+      const loader = document.getElementById('page-loader-overlay');
+      if (loader && !loader.classList.contains('loader-hidden')) {
+        loader.classList.add('loader-hidden');
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 650);
+      }
+    }
+
     // ── LOAD DATA LAPORAN TRANSPARANSI ─────────────────────────────────────────
     function loadPublicLaporanData() {
       const fProg = document.getElementById('public-filter-program') ? document.getElementById('public-filter-program').value : '';
       const fBln = document.getElementById('public-filter-bulan') ? document.getElementById('public-filter-bulan').value : '';
+
+      const statusText = document.getElementById('loader-status-text');
+      if (statusText) statusText.textContent = "Mengambil data mutasi donasi & kas...";
 
       const queryUrl = `${GAS_BACKEND_URL}?api=getLaporanDonasiPublic&program=${encodeURIComponent(fProg)}&bulan=${encodeURIComponent(fBln)}`;
 
@@ -939,10 +1202,18 @@
           } else {
             renderDefaultFallbackDashboard();
           }
+          if (isInitialPageLoad) {
+            isInitialPageLoad = false;
+            hideInitialLoader();
+          }
         })
         .catch(err => {
           console.log("Koneksi offline atau lambat:", err);
           renderDefaultFallbackDashboard();
+          if (isInitialPageLoad) {
+            isInitialPageLoad = false;
+            hideInitialLoader();
+          }
         });
     }
 
@@ -1030,17 +1301,17 @@
 
         let badgeClass = 'bg-primary';
         if (item.kelas.includes('7')) badgeClass = 'bg-info text-dark';
-        else if (item.kelas.includes('8')) badgeClass = 'bg-primary';
+        else if (item.kelas.includes('8')) badgeClass = 'bg-primary text-white';
         else if (item.kelas.includes('9')) badgeClass = 'bg-dark text-white';
-        else if (item.kelas.includes('10')) badgeClass = 'bg-success';
-        else if (item.kelas.includes('11')) badgeClass = 'bg-teal text-white';
+        else if (item.kelas.includes('10')) badgeClass = 'bg-success text-white';
+        else if (item.kelas.includes('11')) badgeClass = 'bg-purple text-white';
         else if (item.kelas.includes('12')) badgeClass = 'bg-warning text-dark';
-        else if (item.kelas.includes('Umum')) badgeClass = 'bg-secondary';
+        else if (item.kelas.includes('Umum')) badgeClass = 'bg-secondary text-white';
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="text-muted fw-semibold">${idx + 1}</td>
-          <td><span class="badge ${badgeClass} px-2 py-1 fw-bold">${item.kelas}</span></td>
+          <td><span class="badge ${badgeClass} px-2 py-1 fw-bold shadow-xs">${item.kelas}</span></td>
           <td class="text-end fw-bold text-success font-monospace">${nomFmt}</td>
           <td class="text-center"><span class="badge bg-light text-dark border">${item.countDonasi}</span></td>
           <td>
@@ -1078,7 +1349,7 @@
         tr.innerHTML = `
           <td class="text-nowrap small text-muted">${item.tanggal || '-'}</td>
           <td class="fw-semibold text-dark">${item.kategori_donasi || '-'}</td>
-          <td><span class="badge bg-light text-dark border px-2 py-1">${item.nama_donatur || 'Hamba Allah'}</span></td>
+          <td class="col-donatur"><span class="badge bg-light text-dark border px-2 py-1">${item.nama_donatur || 'Hamba Allah'}</span></td>
           <td class="text-end fw-bold text-success font-monospace">${nomFmt}</td>
           <td class="text-center"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 small">Diterima</span></td>
         `;
