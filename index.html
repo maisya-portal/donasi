@@ -556,8 +556,18 @@
       </div>
     </div>
 
-    <!-- TOOLBAR FILTER BULAN & PROGRAM (BERSIH & RAPI UNTUK PUBLIK / WALI SANTRI) -->
+    <!-- TOOLBAR FILTER BULAN & PROGRAM (BERSIH DENGAN TOMBOL ADMIN PAGE DI POJOK KANAN ATAS) -->
     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="small text-muted fw-bold d-flex align-items-center gap-1.5" style="font-size: 0.76rem;">
+          <i class="bi bi-sliders2 text-success"></i> Filter Periode &amp; Program
+        </span>
+        <!-- Tombol Tampilkan / Sembunyikan Admin Page di Pojok Kanan Atas Filter -->
+        <button type="button" id="btn-toggle-admin-filter" class="btn btn-sm btn-outline-success rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1.5 fw-semibold shadow-2xs" onclick="toggleAdminPageSection()" style="font-size: 0.74rem;">
+          <i class="bi bi-shield-lock-fill text-warning" id="icon-filter-admin"></i>
+          <span id="text-filter-admin">Admin Page</span>
+        </button>
+      </div>
       <div class="row g-2 align-items-center">
         <div class="col-6 col-sm-6">
           <div class="input-group input-group-sm">
@@ -1117,6 +1127,10 @@
       const icon = document.getElementById('icon-admin-page');
       const text = document.getElementById('text-admin-page');
 
+      const btnFilter = document.getElementById('btn-toggle-admin-filter');
+      const iconFilter = document.getElementById('icon-filter-admin');
+      const textFilter = document.getElementById('text-filter-admin');
+
       if (section) {
         if (isAdminPageShown) {
           section.classList.remove('d-none');
@@ -1129,6 +1143,15 @@
             icon.className = 'bi bi-shield-check text-dark';
           }
           if (text) text.textContent = 'Tutup Admin';
+
+          if (btnFilter) {
+            btnFilter.className = 'btn btn-sm btn-warning text-dark rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1.5 fw-bold shadow-2xs';
+          }
+          if (iconFilter) {
+            iconFilter.className = 'bi bi-shield-check text-dark';
+          }
+          if (textFilter) textFilter.textContent = 'Tutup Admin';
+
           section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
           section.classList.add('d-none');
@@ -1141,6 +1164,14 @@
             icon.className = 'bi bi-shield-lock-fill text-warning';
           }
           if (text) text.textContent = 'Admin Page';
+
+          if (btnFilter) {
+            btnFilter.className = 'btn btn-sm btn-outline-success rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1.5 fw-semibold shadow-2xs';
+          }
+          if (iconFilter) {
+            iconFilter.className = 'bi bi-shield-lock-fill text-warning';
+          }
+          if (textFilter) textFilter.textContent = 'Admin Page';
         }
       }
     }
@@ -1233,6 +1264,8 @@
     }
 
     function applyPublicFilter() {
+      // Otomatis tampilkan panel broadcast WA admin saat memilih bulan atau program
+      toggleAdminPageSection(true);
       loadPublicLaporanData();
     }
 
